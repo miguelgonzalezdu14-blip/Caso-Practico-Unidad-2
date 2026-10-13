@@ -1,0 +1,51 @@
+# EJERCICIO 3: VENTAS
+import csv
+
+# 3.1 Total Ventas con conversión explícita float()
+total_acumulado = 0.0
+
+with open('datos/ventas.csv', 'r', encoding='utf-8') as f:
+    lector = csv.reader(f, delimiter='|')
+    next(lector)  # Saltar cabecera
+    
+    for fila in lector:
+        if fila:
+            monto = float(fila[4].strip())  # Conversión explícita a float
+            total_acumulado += monto
+
+print(f"Suma total de las ventas: ${total_acumulado:.2f}")
+
+# 3.2 Ventas de Camisetas
+with open('datos/ventas.csv', 'r', encoding='utf-8') as f:
+    lineas_csv = list(csv.reader(f, delimiter='|'))
+
+cabecera = lineas_csv[0]
+datos = lineas_csv[1:]
+
+camisetas = [fila for fila in datos if fila and fila[1].strip().lower() == 'camiseta']
+
+with open('camisetas_ventas.csv', 'w', newline='', encoding='utf-8') as f_out:
+    escritor = csv.writer(f_out, delimiter='|')
+    escritor.writerow(cabecera)
+    escritor.writerows(camisetas)
+
+# 3.3 Producto más caro con comparación condicional
+producto_caro = ("", 0.0)
+
+with open('datos/ventas.csv', 'r', encoding='utf-8') as f:
+    lector = csv.reader(f, delimiter='|')
+    next(lector)
+    
+    for fila in lector:
+        if fila:
+            nombre = fila[1].strip()
+            precio = float(fila[3].strip())  # Conversión explícita a float
+            
+            if precio > producto_caro[1]:
+                producto_caro = (nombre, precio)
+            elif precio == producto_caro[1]:
+                pass  # Si fuera el mismo precio
+            else:
+                continue
+
+print(f"El producto más caro es '{producto_caro[0]}' con un valor de ${producto_caro[1]:.2f}")
